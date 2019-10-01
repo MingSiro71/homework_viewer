@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="asset/style/arc.css">
+  <link rel="stylesheet" href="asset/style/uikit.css">
+  <link rel="stylesheet" href="asset/style/style.css">
+  <title>Document</title>
+</head>
+<script src="https://unpkg.com/stein-js-client"></script>
+<body>
+  <nav class="uk-navbar-container uk-margin" style="margin-bottom: 4px;" uk-navbar>
+    <div class="uk-navbar-left" style="flex-wrap:nowrap;">
+
+      <a class="uk-navbar-item uk-logo" href="#"><h1 class="logo"></h1></a>
+
+      <div class="uk-navbar-item" style="margin-left: 68px;">
+        <input id="query-work" class="uk-input uk-form-width-small lock-withLoad unlock-withSend" type="text" placeholder="課題名">
+        <input id="query-tuitor" class="uk-input uk-form-width-small lock-withLoad unlock-withSend" type="text" placeholder="担当チューター">
+        <button id="button-setfilter" class="uk-button uk-button-default lock-withLoad unlock-withSend">Filter</button>
+        <select id="query-name" class="uk-input uk-form-width-small lock-withLoad unlock-withSend" placeholder="受講生氏名"></select>
+        <button id="button-grepData" class="uk-button uk-button-default lock-withLoad unlock-withSend">Load</button>
+        <button id="button-refresh" class="uk-button uk-button-default">Refresh</button>
+      </div>
+  
+    </div>
+  </nav>
+  <h2 style="margin-left:108px;margin-top:0px;">Feedback manager</h2>
+  
+  <div class="dashboard" style="margin-top:30px;">
+    <div class="uk-card uk-card-default col-4-spacing rollscreen">
+      <div class="uk-card-header">
+        <div class="uk-grid-small uk-flex-middle" uk-grid>
+          <div class="uk-width-auto">
+            <img class="icon" src="asset/image/icon-cloud.png">
+          </div>
+          <div class="uk-width-expand">
+            <h3 class="uk-card-title uk-margin-remove-bottom">振り返り</h3>
+          </div>
+        </div>
+      </div>
+      <div class="uk-card-body">
+        <p id="field-review"></p>
+      </div>
+    </div>
+    <div class="uk-card uk-card-default col-4-spacing rollscreen">
+      <div class="uk-card-header">
+        <div class="uk-grid-small uk-flex-middle" uk-grid>
+          <div class="uk-width-auto">
+            <img class="icon" src="asset/image/icon-fire.png">
+          </div>
+          <div class="uk-width-expand">
+            <h3 class="uk-card-title uk-margin-remove-bottom">工夫点</h3>
+          </div>
+        </div>
+      </div>
+      <div class="uk-card-body">
+        <p id="field-devices"></p>
+      </div>
+    </div>
+    <div class="uk-card uk-card-default col-4-spacing rollscreen">
+      <div class="uk-card-header">
+        <div class="uk-grid-small uk-flex-middle" uk-grid>
+          <div class="uk-width-auto">
+            <img class="icon" src="asset/image/icon-question.png">
+          </div>
+          <div class="uk-width-expand">
+            <h3 class="uk-card-title uk-margin-remove-bottom">疑問、苦労した点</h3>
+          </div>
+        </div>
+      </div>
+      <div class="uk-card-body">
+        <p id="field-probrems"></p>
+      </div>
+    </div>
+    <div class="uk-card uk-card-default col-5-spacing" style="margin-top:12px;">
+      <div class="uk-card-header">
+        <div class="uk-grid-small uk-flex-middle" uk-grid>
+          <h3 class="uk-card-title uk-margin-remove-bottom">CodeEditor</h3>
+        </div>
+      </div>
+      <div class="uk-card-body" style="overflow: hidden;">
+        <div id="editor-div" style="height:300px;width:300px;"></div>
+      </div>
+    </div>
+    <div class="uk-card uk-card-default col-7-spacing" style="margin-top:12px;">
+      <div class="uk-card-header">
+        <div class="uk-grid-small uk-flex-middle" uk-grid>
+          <h3 class="uk-card-title uk-margin-remove-bottom">Feedback</h3>
+        </div>
+      </div>
+      <div class="uk-card-body">
+        <textarea id="field-feedback" class="fill-area long-text lock-withSend unlock-withLoad disabled"></textarea>
+      </div>
+      <div class="uk-card-footer">
+        <button id="button-pushFeedback" class="uk-button uk-button-default lock-withSend unlock-withLoad disabled">Send</button>
+      </div>
+    </div>
+    <div class="uk-card uk-card-default col-12-spacing" style="margin-top:12px;">
+      <div class="uk-card-header">
+        <div class="uk-grid-small uk-flex-middle" uk-grid>
+          <h3 class="uk-card-title uk-margin-remove-bottom">課題url</h3>
+        </div>
+      </div>
+      <div class="uk-card-body">
+        <p id="field-url"></p>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <p>
+      <input id="query-sheet" type="text">
+      <button id="button-setSheet" class="lock-withLoad unlock-withSend">シート変更</button>
+    </p>
+  </div>
+
+  <script src="asset/javascript/util.js"></script>
+  <script src="asset/javascript/keys.js"></script>
+  <script src="asset/javascript/steinBasic.js"></script>
+  <script src="asset/javascript/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+  <script src="asset/javascript/ace/mode-html.js"></script>
+  <script src="asset/javascript/ace/mode-css.js"></script>
+  <script src="asset/javascript/ace/mode-javascript.js"></script>
+  <script src="asset/javascript/ace/mode-php.js"></script>
+  <script src="asset/javascript/ace/mode-php_laravel_blade.js"></script>
+  <script src="asset/javascript/ace/mode-sql.js"></script>
+  <script src="asset/javascript/ace/mode-mysql.js"></script>
+  <script>
+
+    const kadaiUrlHeader = "課題URL(GitHubやDropBox等、共有できるところにアップロードし、そのURLで提出してください。zipファイルで圧縮してアップください。)" 
+    let sheet = "マスター";
+
+    const displayData = (data) => {
+      const row = data[data.length-1];
+      const review = row["振り返り"];
+      const devices = row["工夫点"];
+      const probrems = row["疑問、苦労した点"];
+      const url = row[kadaiUrlHeader];
+      document.getElementById("field-review").innerText = review;
+      document.getElementById("field-devices").innerText = devices;
+      document.getElementById("field-probrems").innerText = probrems;
+      document.getElementById("field-url").innerText = url;
+    }
+
+    const filterWithTuitor = (work, tuitor) => {
+      const query = { "課題名": work, "チューター": tuitor + "さん" };
+      searchTable(query, (data)=>{
+        const nameDatas = data.map(col => col["氏名"]);
+        const names = nameDatas.filter(function (x, i, self) {
+          return self.indexOf(x) === i;
+        });
+        const list = document.getElementById("query-name");
+        setOptions(names, list);
+      });
+    }
+
+    const loadWithConditions = (work, tuitor, name) => {
+      const query = { "課題名": work, "チューター": tuitor + "さん", "氏名": name };
+      searchTable(query, (data)=>{
+        displayData(data);
+      });
+      const disableTarget = "lock-withLoad";
+      const enableTarget = "unlock-withLoad";
+      disable(disableTarget);
+      enable(enableTarget);
+    }
+
+    const pushFeedback = (work, tuitor, name, feedback) => {
+
+      const condition = { "課題名": work, "チューター": tuitor + "さん", "氏名": name };
+      const data = { "フィードバック": feedback };
+      const success = ()=>{
+        alert("フィードバックをアップデートしました！")
+        const disableTarget = "lock-withSend";
+        const enableTarget = "unlock-withSend";
+        disable(disableTarget);
+        enable(enableTarget);
+      }
+      const error = ()=>{
+        alert("データの送信に失敗しました。課題名、チューター名、受講者が書き換わっていないか確認してください。");
+      }
+      updateTable(condition, data, success, error);
+    }
+
+    document.getElementById("button-setfilter").addEventListener("click", (e)=>{
+      if (disabled(e.target)) { return false };
+      const work = document.getElementById("query-work").value;
+      const tuitor = document.getElementById("query-tuitor").value;
+      filterWithTuitor(work, tuitor);
+    })
+    document.getElementById("button-grepData").addEventListener("click", (e) => {
+      if (disabled(e.target)) { return false };
+      const work = document.getElementById("query-work").value;
+      const tuitor = document.getElementById("query-tuitor").value;
+      const name = document.getElementById("query-name").value;
+      loadWithConditions(work, tuitor, name);
+    })
+    document.getElementById("button-setSheet").addEventListener("click", (e) => {
+      if (disabled(e.target)) { return false };
+      sheet = document.getElementById("query-sheet").value;
+    })
+    document.getElementById("button-pushFeedback").addEventListener("click", (e) => {
+      if (disabled(e.target)) { return false };
+      const work = document.getElementById("query-work").value;
+      const tuitor = document.getElementById("query-tuitor").value;
+      const name = document.getElementById("query-name").value;
+      const feedback = document.getElementById("field-feedback").value;
+      pushFeedback(work, tuitor, name, feedback);
+    })
+    document.getElementById("button-refresh").addEventListener("click", (e) => {
+      if (disabled(e.target)) { return false };
+      document.getElementById("query-name").value = "";
+      document.getElementById("field-feedback").value = "";
+      document.getElementById("field-review").innerText = "";
+      document.getElementById("field-devices").innerText = "";
+      document.getElementById("field-probrems").innerText = "";
+      document.getElementById("field-url").innerText = "";
+      const disableTarget = "lock-withSend";
+      const enableTarget = "unlock-withSend";
+      disable(disableTarget);
+      enable(enableTarget);
+    })
+
+    const editor = ace.edit("editor-div");
+    editor.getSession().setOptions({
+        mode: "ace/mode/php_laravel_blade",
+        tabSize: 2,
+        useSoftTabs: true
+      });
+  </script>
+
+  <div class="background">
+    <div class="arc-container" style="right:10px;">
+      <div class="arc-wrapper">
+        <div class="arc">a</div>
+      </div>
+    </div>
+    <div class="arc-container" style="right:320px;transform:scale(-1,1);bottom:-200px;">
+      <div class="arc-wrapper">
+        <div class="arc">a</div>
+      </div>
+    </div>
+    <div class="arc-container" style="left:-160px;transform:scale(1,-1);top:-530px;">
+      <div class="arc-wrapper">
+        <div class="arc">a</div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

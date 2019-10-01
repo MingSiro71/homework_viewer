@@ -1,0 +1,86 @@
+h1.logo{
+  position: absolute;
+  top:0px;
+  left:12px;
+  width: 76px;
+  height: 129px;
+  background-image: url("https://gsacademy.tokyo/data/images/index_header_title_bg.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.dashboard{
+  display: flex;
+  margin: auto;
+  width:90%;
+  min-width:928px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.col-1-spacing{
+  width: calc(8.3% - 24px);
+  margin: 0 12px;
+}
+.col-3-spacing{
+  width: calc(25% - 24px);
+  margin: 0 12px;
+}
+.col-4-spacing{
+  width: calc(33.3% - 24px);
+  margin: 0 12px;
+}
+.col-5-spacing{
+  width: calc(41.7% - 24px);
+  margin: 0 12px;
+}
+.col-6-spacing{
+  width: calc(50% - 24px);
+  margin: 0 12px;
+}
+.col-7-spacing{
+  width: calc(58.3% - 24px);
+  margin: 0 12px;
+}
+.col-8-spacing{
+  width: calc(66.7% - 24px);
+  margin: 0 12px;
+}
+.col-9-spacing{
+  width: calc(75% - 24px);
+  margin: 0 12px;
+}
+.col-12-spacing{
+  width: calc(100% - 24px);
+  margin: 0 12px;
+}
+
+.icon{
+  width: 40px;
+  height: 40px;
+}
+
+.fill-area{
+  width: 100%;
+  resize: none;
+}
+
+textarea.long-text{
+  height: calc( 0.75rem * 12 );
+  line-height: 1.1;
+}
+
+.background {
+  position: fixed;
+  top: 30px;
+  left: 30px;
+  height: 100vh;
+  width: 100vw;
+  z-index: -1;
+}
+
+.rollscreen{
+  min-height: 30vh;
+  max-height: 50vh;
+  overflow: scroll;
+}

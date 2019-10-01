@@ -1,0 +1,47 @@
+body{
+  height: 100vh;
+}
+div.arc-container{
+  position: absolute;
+  height: 100vh;
+  width: 55vh;
+  position: absolute;
+  overflow: hidden;
+}
+div.arc-wrapper{
+  position: relative;
+  height: 100%;
+  width:100%;
+}
+div.arc{
+  top: -0%;
+  left: -265%;
+  position: absolute;
+  border-radius: 50%;
+  height: 200vh;
+  width: 200vh;
+  overflow: hidden;
+  background-color:#ffb700;
+}
+div.arc::before{
+  top: -12.5%;
+  left: -26%;
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  height: 120%;
+  width: 120%;
+  overflow: hidden; 
+  background-color: #ff5500;
+}
+div.arc::after{
+  top: -10%;
+  left: -27.5%;
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  height: 120%;
+  width: 120%;
+  overflow: hidden;
+  background-color: #fff;
+}
