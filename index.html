@@ -95,6 +95,7 @@
         <textarea id="field-feedback" class="fill-area long-text lock-withSend unlock-withLoad disabled"></textarea>
       </div>
       <div class="uk-card-footer">
+        <button id="button-keepFeedback" class="uk-button uk-button-default lock-withSend unlock-withLoad disabled">Keep</button>
         <button id="button-pushFeedback" class="uk-button uk-button-default lock-withSend unlock-withLoad disabled">Send</button>
       </div>
     </div>
@@ -110,39 +111,61 @@
     </div>
   </div>
 
-  <div>
+  <!-- only for developers -->
+  <!-- <div>
     <p>
       <input id="query-sheet" type="text">
       <button id="button-setSheet" class="lock-withLoad unlock-withSend">シート変更</button>
     </p>
-  </div>
+  </div> -->
 
   <script src="asset/javascript/util.js"></script>
   <script src="asset/javascript/keys.js"></script>
+  <script>
+    if (typeof(key) == "undefined" || !key || key == ""){
+      alert("APIへのアクセスキーがありません。facebookコミュニティからダウンロードしてください。");
+    }
+  </script>
   <script src="asset/javascript/steinBasic.js"></script>
   <script src="asset/javascript/ace/ace.js" type="text/javascript" charset="utf-8"></script>
   <script src="asset/javascript/ace/mode-html.js"></script>
   <script src="asset/javascript/ace/mode-css.js"></script>
-  <script src="asset/javascript/ace/mode-javascript.js"></script>
   <script src="asset/javascript/ace/mode-php.js"></script>
   <script src="asset/javascript/ace/mode-php_laravel_blade.js"></script>
-  <script src="asset/javascript/ace/mode-sql.js"></script>
-  <script src="asset/javascript/ace/mode-mysql.js"></script>
   <script>
 
-    const kadaiUrlHeader = "課題URL(GitHubやDropBox等、共有できるところにアップロードし、そのURLで提出してください。zipファイルで圧縮してアップください。)" 
-    let sheet = "マスター";
+    let sheet = "課題フィードバック一覧";
+    const workElement = document.getElementById("query-work");
+    const tuitorElement = document.getElementById("query-tuitor");
+    const nameElement = document.getElementById("query-name");
+    const feedbackElement = document.getElementById("field-feedback");
+    const reviewElement = document.getElementById("field-review");
+    const devicesElement = document.getElementById("field-devices");
+    const probremsElement = document.getElementById("field-probrems");
+    const urlElement = document.getElementById("field-url");
 
-    const displayData = (data) => {
+    const displayData = (data, storageHashKey) => {
       const row = data[data.length-1];
       const review = row["振り返り"];
       const devices = row["工夫点"];
       const probrems = row["疑問、苦労した点"];
-      const url = row[kadaiUrlHeader];
-      document.getElementById("field-review").innerText = review;
-      document.getElementById("field-devices").innerText = devices;
-      document.getElementById("field-probrems").innerText = probrems;
-      document.getElementById("field-url").innerText = url;
+      const url = row["課題URL"];
+      let feedback = "";
+      reviewElement.innerText = review;
+      devicesElement.innerText = devices;
+      probremsElement.innerText = probrems;
+      urlElement.innerText = url;
+      if (localStorage.getItem(storageHashKey)){
+        const res = confirm("ローカルストレージに書きかけのフィードバックがあります。ローカルストレージからロードしますか？");
+        if (res){
+          feedback = localStorage.getItem(storageHashKey);
+        } else {
+          feedback = row["フィードバック"];          
+        }
+      } else {
+        feedback = row["フィードバック"];
+      }
+      feedbackElement.value = feedback;
     }
 
     const filterWithTuitor = (work, tuitor) => {
@@ -152,15 +175,16 @@
         const names = nameDatas.filter(function (x, i, self) {
           return self.indexOf(x) === i;
         });
-        const list = document.getElementById("query-name");
+        const list = nameElement;
         setOptions(names, list);
       });
     }
 
     const loadWithConditions = (work, tuitor, name) => {
       const query = { "課題名": work, "チューター": tuitor + "さん", "氏名": name };
+      const storageHashKey = "homework_viewer-" + work + "-" + name;
       searchTable(query, (data)=>{
-        displayData(data);
+        displayData(data, storageHashKey);
       });
       const disableTarget = "lock-withLoad";
       const enableTarget = "unlock-withLoad";
@@ -168,16 +192,33 @@
       enable(enableTarget);
     }
 
-    const pushFeedback = (work, tuitor, name, feedback) => {
+    const reflesh = (e) => {
+      nameElement.value = "";
+      feedbackElement.value = "";
+      reviewElement.innerText = "";
+      devicesElement.innerText = "";
+      probremsElement.innerText = "";
+      urlElement.innerText = "";
+      const disableTarget = "lock-withSend";
+      const enableTarget = "unlock-withSend";
+      disable(disableTarget);
+      enable(enableTarget);
+    }
 
+    const pushFeedback = (work, tuitor, name, feedback) => {
       const condition = { "課題名": work, "チューター": tuitor + "さん", "氏名": name };
       const data = { "フィードバック": feedback };
       const success = ()=>{
-        alert("フィードバックをアップデートしました！")
+        const storageHashKey = "homework_viewer-" + work + "-" + name;
+        if (localStorage.getItem(storageHashKey)){
+          localStorage.removeItem(storageHashKey);
+          alert("フィードバックをアップデートしました！（ローカルストレージの書きかけデータは消去されました）")
+        } else {
+          alert("フィードバックをアップデートしました！")
+        }
         const disableTarget = "lock-withSend";
         const enableTarget = "unlock-withSend";
-        disable(disableTarget);
-        enable(enableTarget);
+        reflesh();
       }
       const error = ()=>{
         alert("データの送信に失敗しました。課題名、チューター名、受講者が書き換わっていないか確認してください。");
@@ -185,51 +226,61 @@
       updateTable(condition, data, success, error);
     }
 
+    const keepFeedback = (work, name, feedback) => {
+      const storageHashKey = "homework_viewer-"+work+"-"+name;
+      let res = true;
+      if (localStorage.getItem(storageHashKey)){ res = confirm("上書き処理になりますが、よろしいですか？") }
+      if (res){
+        localStorage.setItem(storageHashKey, feedback);
+        alert("フィードバックをローカルストレージにアップしました！");
+        const disableTarget = "lock-withSend";
+        const enableTarget = "unlock-withSend";
+      }
+    }
+
     document.getElementById("button-setfilter").addEventListener("click", (e)=>{
       if (disabled(e.target)) { return false };
-      const work = document.getElementById("query-work").value;
-      const tuitor = document.getElementById("query-tuitor").value;
+      const work = workElement.value;
+      const tuitor = tuitorElement.value;
       filterWithTuitor(work, tuitor);
     })
     document.getElementById("button-grepData").addEventListener("click", (e) => {
       if (disabled(e.target)) { return false };
-      const work = document.getElementById("query-work").value;
-      const tuitor = document.getElementById("query-tuitor").value;
-      const name = document.getElementById("query-name").value;
+      const work = workElement.value;
+      const tuitor = tuitorElement.value;
+      const name = nameElement.value;
       loadWithConditions(work, tuitor, name);
     })
-    document.getElementById("button-setSheet").addEventListener("click", (e) => {
+    // document.getElementById("button-setSheet").addEventListener("click", (e) => {
+    //   if (disabled(e.target)) { return false };
+    //   sheet = document.getElementById("query-sheet").value;
+    // })
+    document.getElementById("button-keepFeedback").addEventListener("click", (e) => {
       if (disabled(e.target)) { return false };
-      sheet = document.getElementById("query-sheet").value;
+      const work = workElement.value;
+      const name = nameElement.value;
+      const feedback = feedbackElement.value;
+      keepFeedback(work, name, feedback);
     })
     document.getElementById("button-pushFeedback").addEventListener("click", (e) => {
       if (disabled(e.target)) { return false };
-      const work = document.getElementById("query-work").value;
-      const tuitor = document.getElementById("query-tuitor").value;
-      const name = document.getElementById("query-name").value;
-      const feedback = document.getElementById("field-feedback").value;
+      const work = workElement.value;
+      const tuitor = tuitorElement.value;
+      const name = nameElement.value;
+      const feedback = feedbackElement.value;
       pushFeedback(work, tuitor, name, feedback);
     })
     document.getElementById("button-refresh").addEventListener("click", (e) => {
-      if (disabled(e.target)) { return false };
-      document.getElementById("query-name").value = "";
-      document.getElementById("field-feedback").value = "";
-      document.getElementById("field-review").innerText = "";
-      document.getElementById("field-devices").innerText = "";
-      document.getElementById("field-probrems").innerText = "";
-      document.getElementById("field-url").innerText = "";
-      const disableTarget = "lock-withSend";
-      const enableTarget = "unlock-withSend";
-      disable(disableTarget);
-      enable(enableTarget);
-    })
+      if (disabled(e.target)){ return false };
+      reflesh();
+    });
 
     const editor = ace.edit("editor-div");
     editor.getSession().setOptions({
-        mode: "ace/mode/php_laravel_blade",
-        tabSize: 2,
-        useSoftTabs: true
-      });
+      mode: "ace/mode/php_laravel_blade",
+      tabSize: 2,
+      useSoftTabs: true
+    });
   </script>
 
   <div class="background">

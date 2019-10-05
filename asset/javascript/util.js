@@ -8,13 +8,23 @@ const disabled = (htElem) => {
 
 const disable = (targetClass) => {
   Array.from(document.getElementsByClassName(targetClass)).map(
-    el => el.classList.add("disabled")
+    (el) => { 
+      el.classList.add("disabled");
+      if (el.tagName == "SELECT" || el.tagName == "INPUT"){
+        el.setAttribute("disabled", "disabled");
+      }
+    }
   );
 }
 
 const enable = (targetClass) => {
   Array.from(document.getElementsByClassName(targetClass)).map(
-    el => el.classList.remove("disabled")
+    (el) => {
+      el.classList.remove("disabled");
+      if (el.tagName == "SELECT" || el.tagName == "INPUT") {
+        el.removeAttribute("disabled");
+      }
+    }
   );
 }
 

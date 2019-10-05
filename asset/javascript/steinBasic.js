@@ -1,5 +1,9 @@
 const store = new SteinStore(key);
 
+const error = () => {
+  alert("apiエラーが発生しました。");
+}
+
 const searchTable = (query, callback) => {
   store
     .read(sheet, {
@@ -7,6 +11,9 @@ const searchTable = (query, callback) => {
       search: query
     })
     .then((data) => {
+      if(!data){
+        alert("api not working!");
+      }
       callback(data);
     });
 }
@@ -14,6 +21,7 @@ const searchTable = (query, callback) => {
 const updateTable = (condition, data, success, error) => {
   store
     .edit(sheet, {
+      authentication: { username: "ming", password: "ming" },
       search: condition,
       set: data
     })
