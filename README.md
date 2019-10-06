@@ -9,7 +9,7 @@ homework_viewerは、g's academy TOKYO devコースチューター向けに作�
 また、期が変更されるごとにスプレッドシートも新しくなるため、その際も新しいAPIキーをコミュニティから取得する必要があります。
 APIキーは次のようにファイルを作ることでアプリケーションにロードされます。
 
-ファイルパス： ./homework_viewer/javascript/keys.js
+ファイルパス： ./homework_viewer/asset/javascript/keys.js
 
 ```keys.js
 const key = "The key copied from comunity";
