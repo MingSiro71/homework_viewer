@@ -1,6 +1,6 @@
 # homework_viewer
 
-homework_viewerは、g's accademy TOKYO devコースチューター向けに作成された
+homework_viewerは、g's academy TOKYO devコースチューター向けに作成された
 課題提出管理用のスプレッドシートからサーバーレスでデータを取得し、フィードバックを書き込むことのできるアプリケーションです。
 
 アプリケーションは安全のためにAPIキーを記載したファイルを除外して公開されています。
