@@ -227,7 +227,7 @@
     }
 
     const keepFeedback = (work, name, feedback) => {
-      const storageHashKey = "homework_viewer-"+work+"-"+name;
+      const storageHashKey = "homework_viewer-" + work + "-" + name;
       let res = true;
       if (localStorage.getItem(storageHashKey)){ res = confirm("上書き処理になりますが、よろしいですか？") }
       if (res){
@@ -251,10 +251,6 @@
       const name = nameElement.value;
       loadWithConditions(work, tuitor, name);
     })
-    // document.getElementById("button-setSheet").addEventListener("click", (e) => {
-    //   if (disabled(e.target)) { return false };
-    //   sheet = document.getElementById("query-sheet").value;
-    // })
     document.getElementById("button-keepFeedback").addEventListener("click", (e) => {
       if (disabled(e.target)) { return false };
       const work = workElement.value;
@@ -272,7 +268,9 @@
     })
     document.getElementById("button-refresh").addEventListener("click", (e) => {
       if (disabled(e.target)){ return false };
-      reflesh();
+      if (feedbackElement.value == "" || confirm("フィードバックフィールドが削除されますが、よろしいですか？")){
+        reflesh()
+      }
     });
 
     const editor = ace.edit("editor-div");
