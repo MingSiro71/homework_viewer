@@ -149,12 +149,22 @@
       const review = row["振り返り"];
       const devices = row["工夫点"];
       const probrems = row["疑問、苦労した点"];
-      const url = row["課題URL"];
+      const urlCellString = row["課題URL"];
+      const urlArray = urlCellString.split(/\r\n|\n/);
+      const urlHtmlArray = []
+      const pattern = ["http://", "https://", "git://"]
+      urlArray.map((url) => {
+        if (url.search(pattern)) {
+          urlHtmlArray.push('<a href=' + url + ' target="_blank" rel="noopener noreferrer">' + url + '</a>')
+        } else {
+          urlHtmlArray.push("<span>" + url + "</span>")
+        }
+      })
       let feedback = "";
       reviewElement.innerText = review;
       devicesElement.innerText = devices;
       probremsElement.innerText = probrems;
-      urlElement.innerText = url;
+      urlElement.insertAdjacentHTML("afterbegin", urlHtmlArray.join("<br>"));
       if (localStorage.getItem(storageHashKey)){
         const res = confirm("ローカルストレージに書きかけのフィードバックがあります。ローカルストレージからロードしますか？");
         if (res){
@@ -198,7 +208,7 @@
       reviewElement.innerText = "";
       devicesElement.innerText = "";
       probremsElement.innerText = "";
-      urlElement.innerText = "";
+      urlElement.innerHTML = "";
       const disableTarget = "lock-withSend";
       const enableTarget = "unlock-withSend";
       disable(disableTarget);
